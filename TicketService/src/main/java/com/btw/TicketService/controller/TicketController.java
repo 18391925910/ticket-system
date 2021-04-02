@@ -35,5 +35,8 @@ public class TicketController {
     public String reduceTicketQuantity(String ticket_id){
         return service.reduceTicketQuantity(ticket_id);
     }
-
+    @GetMapping("getStations")
+    public String getCityStations(@RequestParam("city")String city){
+        return service.getCityStations(city);
+    }
 }

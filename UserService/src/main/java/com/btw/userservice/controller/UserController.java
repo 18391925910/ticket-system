@@ -22,7 +22,7 @@ public class UserController {
     @Autowired
     UserCommandServiceImpl userCommandService;
 
-    /*
+    /**
      *    注册
      *   @Param:face_base64是使用base64编码和url编码后的image信息
     */

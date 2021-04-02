@@ -6,4 +6,5 @@ public abstract class OrderCommandService {
     public abstract String getOrder(String order_id);
     public abstract String getAllOrder();
     public abstract String getUserAllOrder(String order_id);
+    public abstract String createTicketQRCode(String order_id);
 }

@@ -15,6 +15,6 @@ import java.util.ArrayList;
 public interface StationMapper {
 
     @Select("select * from city_stations where city = #{city}")
-    ArrayList<Station> getAllStationS(@Param("city") String city);
+    ArrayList<Station> getCityStations(@Param("city") String city);
 
 }

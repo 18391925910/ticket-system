@@ -77,6 +77,11 @@ public class OrderCommandServiceImpl extends OrderCommandService {
     }
 
     @Override
+    public String createTicketQRCode(String order_id) {
+        return null;
+    }
+
+    @Override
     public String getAllOrder() {
         return JSON.toJSONString(orderMapper.getAllOrder());
     }

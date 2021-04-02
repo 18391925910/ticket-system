@@ -33,4 +33,12 @@ public class OrderController {
         return orderCommandService.getAllOrder();
     }
 
+    /**
+     * 生成取票码
+     * @return
+     */
+    @GetMapping("createTicketQRCode")
+    String createTicketQRCode(@RequestParam("order_id")String order_id){
+        return orderCommandService.createTicketQRCode(order_id);
+    }
 }

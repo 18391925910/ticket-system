@@ -1,6 +1,7 @@
 package com.btw.TicketService.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /*
@@ -27,6 +28,13 @@ public class ResultJsonUtil {
             JSONObject jsonObject=JSON.parseObject(objectStr);
             JSONObject curJsonObject=JSONObject.parseObject(result);
             curJsonObject.put(key,jsonObject);
+            this.result=curJsonObject.toJSONString();
+            return this;
+        }
+        public ResultJson addArray(String key,String arrayStr){
+            JSONArray array=JSON.parseArray(arrayStr);
+            JSONObject curJsonObject=JSONObject.parseObject(result);
+            curJsonObject.put(key,array);
             this.result=curJsonObject.toJSONString();
             return this;
         }
