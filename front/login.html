@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>登陆</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <link href="css/login-style.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <script src="js/jquery-3.5.1.min.js"></script>
+</head>
+
+<body>
+
+    <div id="top-con">
+        <img class="top-icon" src="img/icon.jpg">
+        <img class="top-title" src="img/title.png">
+    </div>
+    <div id="mid-con">
+        <div id="login-con">
+            <div id="login-btn-con">
+                <button id="login-btn-ps">密码登录</button>
+                <button id="login-btn-face">人脸登录</button>
+            </div>
+            <div id="choose-hint-1"></div>
+            <div id="choose-hint-2"></div>
+            <div id="divider-1"></div>
+            <div id="login-input-con">
+            </div>
+        
+            <script>
+                $(document).ready(function(){
+                    $("#login-input-con").load("component/ps-login.html");
+                    $("#login-btn-ps").click(function(){
+                        $("#login-input-con").empty();
+                        $("#login-input-con").load("component/ps-login.html");
+                        $("#login-btn-ps").css("color","rgb(5, 156, 55)");
+                        $("#login-btn-face").css("color","rgb(99, 99, 99);");
+                        $("#choose-hint-1").css("visibility","visible");
+                        $("#choose-hint-2").css("visibility","hidden");
+                    });
+                    $("#login-btn-face").click(function(){
+                        $("#login-input-con").empty();
+                        $("#login-input-con").load("component/face-login.html");
+                        $("#login-btn-face").css("color","rgb(5, 156, 55)");    
+                        $("#login-btn-ps").css("color","rgb(99, 99, 99);");
+                        $("#choose-hint-2").css("visibility","visible");
+                        $("#choose-hint-1").css("visibility","hidden");
+                    });
+                });
+            
+            </script>
+        </div>
+    </div>
+</body>
+</html>

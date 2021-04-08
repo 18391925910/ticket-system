@@ -1,0 +1,37 @@
+﻿<div>
+    <input id="login_id" placeholder="账号/邮箱" type="text" style="width: 80%;height: 35px;
+    ;margin-left: 10%;margin-top: 20px;"/>
+    <input id="login_ps" placeholder="密码" type="text" style="width: 80%;height: 35px;
+    ;margin-left: 10%;margin-top: 10px;"/>
+    <div style="margin-left: 30px;margin-top: 10px;">
+        <input type="checkbox"/><span style="color: rgb(66, 66, 66);font-size: 15px;">自动登录</span>
+    </div>
+    <input id="login-ps-btn" value="登录" type="button" style="width: 88%;height: 50px;
+    ;margin-left: 10%;margin-top: 10px;background-color: #ff6257;border-radius: 5px;color: #fff;font-size: 20px;"/>
+    
+    <div id="btn-register"  style="margin-top: 20px;"><a href="logup.html" style="text-decoration: none;">没有账号？立即注册</a></div>
+    <script>
+        document.getElementById("login-ps-btn").onclick=function(){
+            //登陆
+            $.ajax({
+                url:"http://localhost:8080/user/signInByPassword",
+                data:{"id":$("#login_id").val(),"ps":$("#login_ps").val()},
+                dataType:"json",
+                type:"POST",
+                success:function(res){
+                    if(res.result=="success"){
+                        sessionStorage.setItem("id",$("#login_id").val());
+                        window.location.href="main.html";
+                    }else if(res.result=="fail"){
+                        console.log(res.info);
+                    }
+                    
+                },
+                error:function(e,x,s){
+                    console.log(JSON.stringify(e));
+                    
+                }
+            })
+        }
+    </script>
+</div>

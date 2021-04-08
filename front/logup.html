@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>注册</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <link href="css/login-style.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <script src="js/jquery-3.5.1.min.js"></script>
+</head>
+
+<body>
+
+    <div id="top-con">
+        <img class="top-icon" src="img/icon.jpg">
+        <img class="top-title" src="img/title.png">
+        <span id="register-welcome">欢迎注册</span> 
+    </div>
+    <div>
+        <div id="register-con">
+            <span class="title-gray-mid">填写信息，完成注册</span><span style="color: #fc0000;
+                font-size: 25px;height: 30px;margin-top: 20px;display: inline-block;"> * </span>
+            <div id="register-divider"></div>
+            <div id="register-input-con">
+                <div class="hint-info-sm">* 请设置您的昵称.</div>
+                <input id="register-name" class="register-input-1" type="text" placeholder="昵称"/>
+                <div class="hint-info-sm">* 请设置账号，用于登录。</div>
+                <input id="register-id" class="register-input-1" type="text" placeholder="账号"/>
+                <div class="hint-info-sm">* 请设置密码，6-15位数字或字母。</div>
+                <input id="register-ps" class="register-input-1" type="password" placeholder="密码"/>
+            </div>
+            <div id="register-camera-con">
+                <div class="hint-info-sm">* 请开启摄像头，完成人脸认证</div>
+
+                <video id="video" width="40%" height="150px" style="border-radius: 5px;border: 1px solid #5f5f5f;
+                margin-left: 60px;margin-top: 10px;" autoplay="autoplay"></video>
+                <br/>
+                <input id="register-face-btn-camera" value="开始扫描" type="button" style="width: 100px;height: 30px;
+                ;margin-left: 40px;margin-top: 10px;background-color: #286291;border-radius: 5px;color:  #fff;
+                 font-size: 15px;"/>
+                 <input id="register-face-btn-complate" value="扫描完成" type="button" style="width: 100px;height: 30px;
+                 ;margin-left: 30px;margin-top: 10px;background-color: #286291;border-radius: 5px;color: #fff;
+                 font-size: 15px;"/>
+            </div>
+            <div style="height: 300px;margin-top: 20px;">
+                <div>
+                    <input id="argee-pro-cb" type="checkbox"/>
+                    <span style="font-size: 13px;">我已阅读并同意</span>
+                    <span><a class="a-green-sm">《飞鸟出行服务协议》</a></span>
+                </div>
+                <input id="register-btn-signup" value="同意服务条款并注册" type="button" style="width: 300px;height: 60px;
+                 ;margin-left: 10px;margin-top: 10px;background-color: #ff6257;border-radius: 5px;color: #fff;
+                 font-size: 20px;"/>
+            </div>
+            
+        </div>
+        <script>
+            let img;
+            document.getElementById("register-face-btn-camera").onclick=function(){
+                openMedia();
+            };
+            document.getElementById("register-face-btn-complate").onclick=function(){
+                img=takePhoto();
+                closeMedia();
+            };
+            document.getElementById("register-btn-signup").onclick=function(){
+                signUp();
+            };
+            function signUp(){
+                i=encodeURI(img);
+                $.ajax({
+                url:"http://localhost:8080/user/signUp",
+                data:{"id":$("#register-id").val(),
+                    "ps":$("#register-ps").val(),
+                    "name":$("#register-name").val(),
+                    "face_base64":i
+                },
+                dataType:"json",
+                type:"POST",
+                success:function(res){
+                    if(res.result=="success"){
+                        alert("注册成功");
+                        window.location.href="login.html"
+                    }else if(res.result=="fail"){
+                        console.log("失败");
+                        alert(res.info);
+                    }
+                    
+                },
+                error:function(e,x,s){
+                    alert("注册失败，原因："+JSON.stringify(e));
+                }
+            })
+            }
+            function openMedia() {
+            let constraints = {
+                video: { width: 500, height: 500 },
+                audio: false
+            };
+            //获得video摄像头
+            video = document.getElementById('video');     
+            let promise = navigator.mediaDevices.getUserMedia(constraints);
+            promise.then((mediaStream) => {
+            // mediaStreamTrack = typeof mediaStream.stop === 'function' ? mediaStream : mediaStream.getTracks()[1];
+            mediaStreamTrack=mediaStream.getVideoTracks()
+                video.srcObject = mediaStream;
+                video.play();
+            });
+            
+        }
+            function takePhoto() {
+                //获得Canvas对象
+                let video = document.getElementById('video');
+                let canvas = document.createElement("canvas");
+                let ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0,canvas.width, canvas.height);
+                // toDataURL  ---  可传入'image/png'---默认, 'image/jpeg'
+                let img = canvas.toDataURL();
+                console.log(img);
+                return img;
+            }
+            function closeMedia() {
+              let stream = document.getElementById('video').srcObject;
+              let tracks = stream.getTracks();
+              tracks.forEach(function(track) {
+                track.stop();
+              });
+    
+             document.getElementById('video').srcObject = null;
+            }
+        </script>
+    </div>
+</body>
+</html>

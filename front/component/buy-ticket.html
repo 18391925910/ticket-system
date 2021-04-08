@@ -1,0 +1,194 @@
+<div>
+    <div class="buy-ticket-con">
+        <div class="s-s-b-g" >机票查询</div>
+        <div class="s-s-b-t" >国际机票</div>
+        <br/>
+        <div class="s-t-h-c">
+            <div class="s-t-h-1" style="float: left;margin-left: 20px;">出发城市</div>
+            <div class="s-t-h-1" style="float:right;margin-right: 20px;">到达城市</div>
+        </div>
+        <br/>
+        <div class="s-t-h-c">
+            <input id="start-city" type="text" class="s-t-t-1" value="北京"
+             style="float: left;margin-left:10px;color: rgb(136, 136, 136);"/>
+            <input id="end-city" type="text" class="s-t-t-1" value="上海"
+             style="float: right;margin-right:20px;color: rgb(136, 136, 136);"/>
+        </div>
+        <br/>
+        <div style="font-size: 13px;
+        color: rgb(121, 121, 121);margin-left: 20px;float: left;width: 40%;">出发日期</div>
+        <div style="font-size: 13px;
+        color: rgb(121, 121, 121);margin-right: 20px;float: right;width: 40%;">返回日期</div>
+        <br/>
+        <input id="start-time" type="text" class="s-pd-s" value="2020-5-1"
+        style="float: left;margin-left: 10px;color: rgb(136, 136, 136);"/>
+        <input id="start-time" type="text" class="s-pd-s" value="2020-5-1"
+        style="float: right;;margin-right: 22px;color: rgb(136, 136, 136);"/>
+        <input type="button" id="search-btn-search" value="查询"/>
+        <script>
+            document.getElementById("search-btn-search").onclick=function(){
+                $.ajax({
+                url:"http://localhost:8080/ticket/getTicketsBySED",
+                data:{"start":$("#start-city").val(),"end":$("#end-city").val(),"date":$("#start-time").val()},
+                type:"GET",
+                success:function(res){
+                    console.log(res);
+                    $("#buy-ticket-result-con").css("visibility","visible");
+                    $("#main-result-title-start").text($("#start-city").val());
+                    $("#main-result-title-end").text($("#end-city").val());
+                    $("#main-result-title-date").text($("#start-time").val());
+                    //$("#main-result-title-resultNum").text(res.list.length+"个航班");
+                   JSON.parse(res).forEach(element => {
+                        addTicketItem(element.start,element.end,element.start_time,element.end_time,element.price,element.flight_id,element.ticket_id,element.quantity);
+                    });
+                },
+                error:function(e,x,s){
+                    console.log(JSON.stringify(e));
+                }
+            });
+            }
+        </script>
+    </div>
+    <div id="buy-ticket-result-con">
+        <div style="height: 30px;width: 100%;margin-left: 20px;margin-top: 10px;">
+            <div id="main-result-title-start" style="display: inline;font-size: 18px;font-weight: 500;">北京</div>
+            <div style="display: inline;font-size: 20px;font-weight: 600;margin-left: 10px;">--></div>
+            <div id="main-result-title-end" style="display: inline;font-size: 18px;font-weight: 500;margin-left: 10px;">上海</div>
+            <div id="main-result-title-date" style="display: inline;font-size: 17px;font-weight: 500;margin-left: 20px;">2020-5-21</div>
+            <div id="main-result-title-resultNum" style="display: inline;font-size: 15px;"></div>
+        </div>
+        <div style="height: 20px;width: 100%;margin-left: 20px;margin-top: 5px;">
+            <div class="main-result-con-ul-li-divider" style="height: 1px;background-color: #ccc;margin-bottom: 5px;"></div>
+            <div id="main-result-title-date" style="display: inline;font-size: 17px;font-weight: 500;margin-left: 30px;">航班</div>
+            <div id="main-result-title-date" style="display: inline;font-size: 17px;font-weight: 500;margin-left: 30px;">起点</div>
+            <div id="main-result-title-date" style="display: inline;font-size: 17px;font-weight: 500;margin-left: 100px;">终点</div>
+            <div id="main-result-title-date" style="display: inline;font-size: 17px;font-weight: 500;margin-left: 30px;">出发时间</div>
+            <div id="main-result-title-date" style="display: inline;font-size: 17px;font-weight: 500;margin-left: 20px;">到达时间</div>
+            <div id="main-result-title-date" style="display: inline;font-size: 17px;font-weight: 500;margin-left: 20px;">数量</div>
+            <div id="main-result-title-date" style="display: inline;font-size: 17px;font-weight: 500;margin-left: 30px;">价格</div>
+            
+        </div>
+        <div id="main-result-con">
+            <ul id="main-result-con-ul" style="padding: 0;">
+
+            </ul>
+            <div class="main-result-con-ul-li-divider"></div>
+        </div>
+
+    </div>
+    <script>
+        $(document).ready(function(){
+            //addTicketItem("浦东机场","咸阳机场","12：50","2:10","￥125","T4580","111");
+            //addTicketItem("浦东机场","咸阳机场","12：50","2:10","￥125","T4580","111");
+        });
+        function addTicketItem(start,end,start_time,end_time,price,flight,ticket_id,num){
+            var main_result_con_ul = document.getElementById("main-result-con-ul");
+            var li=document.createElement("li");
+            li.classList.add("main-result-con-ul-li");
+            var flight_div=document.createElement("div");
+            flight_div.classList.add("main-result-con-ul-li-flight");
+            flight_div.innerHTML=flight;
+            var start_div=document.createElement("div");
+            var end_div=document.createElement("div");
+            var start_symbol=document.createElement("div");
+            start_symbol.classList.add("start-symbol");
+            start_symbol.innerHTML="--->";
+            start_div.classList.add("main-result-con-ul-li-place");
+            end_div.classList.add("main-result-con-ul-li-place");
+            start_div.innerHTML=start;
+            end_div.innerHTML=end;
+            var start_time_div=document.createElement("div");
+            var end_time_div=document.createElement("div");
+            start_time_div.classList.add("main-result-con-ul-li-time");
+            end_time_div.classList.add("main-result-con-ul-li-time");
+            start_time_div.innerHTML=start_time;
+            end_time_div.innerHTML=end_time;
+            var ticket_num_div=document.createElement("div");
+            ticket_num_div.classList.add("main-result-con-ul-li-time");
+            ticket_num_div.innerHTML=num;
+            var price_div=document.createElement("div");
+            price_div.classList.add("main-result-con-ul-li-price");
+            price_div.innerHTML=price;
+            var divider =document.createElement("div");
+            divider.classList.add("main-result-con-ul-li-divider");
+            var button=document.createElement("button");
+            button.innerHTML="订购";
+            button.classList.add("main-result-con-ul-li-btn");
+            button.onclick=function(){
+                $.ajax({
+                url:"http://localhost:8080/order/addOrder",
+                data:{"user_id":sessionStorage.getItem("id"),"ticket_id":ticket_id},
+                type:"GET",
+                success:function(res){
+                    alert(res);
+                },
+                error:function(e,x,s){
+                    console.log(JSON.stringify(e));
+                }
+            });
+            };
+            li.appendChild(divider);
+            li.appendChild(flight_div);
+            li.appendChild(start_div);
+            li.appendChild(start_symbol);
+            li.appendChild(end_div);
+            li.appendChild(start_time_div);
+            li.appendChild(end_time_div);
+            li.appendChild(ticket_num_div);
+            li.appendChild(price_div);
+            li.appendChild(button);
+            main_result_con_ul.appendChild(li);
+        }
+    </script>
+    <style>
+        .main-result-con-ul-li-divider{
+            width: 100%;
+            height: 5px;
+            background-color:#ccc;
+        }
+        .main-result-con-ul-li{
+            width: 100%;
+            height: 100px;
+            list-style: none;
+            margin-top: 10px;
+        }
+        .main-result-con-ul-li-flight{
+            margin-left: 40px;
+            display: inline-block;
+            font-size: 20px;
+            margin-top: 40px;
+        }
+        .main-result-con-ul-li-place{
+            margin-left: 20px;
+            display: inline;
+            font-size: 18px;
+        }
+        .start-symbol{
+            font-size: 18px;
+            margin-left: 20px;
+            display: inline;
+            font-weight: 500;
+        }
+        .main-result-con-ul-li-time{
+            margin-left: 30px;
+            font-size: 20px;
+            font-weight: 500;
+            display: inline;
+        }
+        .main-result-con-ul-li-price{
+            margin-left: 30px;
+            display: inline;
+            color: crimson;
+            font-size: 20px;
+        }
+        .main-result-con-ul-li-btn{
+            background-color: #ff9a33;
+            color: #fff;
+            margin-left: 30px;
+            width: 80px;
+            height: 30px;
+            border: none;
+        }
+    </style>
+
+</div>

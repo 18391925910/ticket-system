@@ -1,0 +1,246 @@
+<div style="width: 100%;background: #fff;height: 600px;display: block;">
+    
+    <div style="width: 60%;margin-left: 30%;margin-top: 20px;">
+        <div style="font-size: 20px;font-weight: 600;color: #00c777;;margin-left: 40px;padding-top: 30px;">全部订单</div>
+        <div style="width: 100%;height: 1px;background-color: #ccc;margin-left: 20px;margin-top: 10px;"></div>
+        <ul id="order-result-con-ul">
+
+        </ul>
+    </div>
+    <div id="order-info-window" class="alert-window">
+        <button id="closeWindow" style="width: 80px;height: 30px;background-color: #00c777;border: none;
+        ;float: right;">
+            关闭
+        </button>
+        <div style="font-size: 20px;color: #00c777;margin-top: 40px;margin-left: 20px;">订单详情</div>
+        <div class="divider-2"></div>
+        <div style="margin-top: 20px;width: 100%;">
+            <div style="margin-left: 10%;width: 80%;height: 40px;">
+                <div id="order-info-flight" class="order-info-item-l">航班：T1531</div>
+                <div id="order-info-order-id" class="order-info-item-r">订单编号：4156</div>
+            </div>
+            <div  style="margin-left: 10%;width: 80%;height: 40px;">
+                <div id="order-info-start" class="order-info-item-l">出发地：上海</div>
+                <div id="order-info-end" class="order-info-item-r">目的地：西安</div>
+            </div>
+            <div  style="margin-left: 10%;width: 80%;height: 40px;">
+                <div id="order-info-start-time" class="order-info-item-l">出发时间：9：20</div>
+                <div id="order-info-end-time" class="order-info-item-r">到达时间：15：30</div>
+            </div>
+            <div  style="margin-left: 10%;width: 80%;height: 40px;">
+                <div id="order-info-price" class="order-info-item-l">价格：125元</div>
+                <div id="order-info-date" class="order-info-item-r">日期：2020-5-14</div>
+            </div>
+            <div  style="margin-left: 10%;width: 80%;height: 40px;">
+                <button id="order-info-cancle" value="取消订单" class="order-info-item-l" style="background-color: darkgoldenrod;
+                border: none;"></button>
+                <script>
+                    document.getElementById("order-info-cancle").onclick=function(){
+                        $.ajax({
+                        url:"http://localhost:8080/order/cancelOrder",
+                        data:{"order_id":order_id},
+                        type:"GET",
+                        success:function(res){
+                            alert(res);
+                        },
+                        error:function(e,x,s){
+                            console.log(JSON.stringify(e));
+                        }
+                    });
+                    }
+                </script>
+            </div>
+        </div>
+        <div>
+            <div style="display: inline;float: left;width: 50%;">
+                    
+                <ol id="order-info-pro-ul">
+                    <div>服务条款</div>
+                    <li>此处是条款一，请将条款内容替换至此</li>
+                    <li>此处是条款二，请将条款内容替换至此</li>
+                    <li>此处是条款三，请将条款内容替换至此</li>
+                    <li>此处是条款四，请将条款内容替换至此</li>
+                    <li>此处是条款五，请将条款内容替换至此</li>
+                </ol>
+            </div>
+            <div  style="margin-right: 15%;float: right;width: 30%;margin-top: 10px;">
+                <div style="text-align: center;margin-top: 20px;">取票码</div>
+                <img width="60%" height="60%" style="margin-left: 20%;margin-top: 10px;" src="../img/login-mid-bg.jpg"/>
+            </div>
+            
+        </div>
+    </div>
+    <style>
+        #order-info-pro-ul{
+            margin-top: 40px;
+            margin-left: 10%;
+        }
+        #order-info-pro-ul>li{
+            font-size: 13px;
+            margin-left: 10px;
+            margin-top: 5px;
+            color: #585858;
+        }
+        .order-info-item-l{
+            display: inline;
+            width: 40%;
+            margin-top: 20px;
+            margin-left: 10px;
+            color: #303030;
+            float: left;
+        }
+        .order-info-item-r{
+            display: inline;
+            width: 40%;
+            margin-top: 20px;
+            margin-left: 10px;
+            float: right;
+            color: #303030;
+        }
+        .divider-2{
+            width: 100%;
+            height: 1px;
+            margin-top: 10px;
+            background-color:#ccc;
+        }
+        .main-result-con-ul-li-divider{
+            width: 100%;
+            height: 5px;
+            background-color:#ccc;
+        }
+        .main-result-con-ul-li{
+            width: 100%;
+            height: 100px;
+            list-style: none;
+            margin-top: 10px;
+            border-radius: 3px;
+            border: 1px solid #c0c0c0;
+
+        }
+        .main-result-con-ul-li:hover{
+            background-color: #00c777;
+            cursor: pointer;
+        }
+        .main-result-con-ul-li-flight{
+            margin-left: 30px;
+            display: inline-block;
+            font-size: 20px;
+            margin-top: 40px;
+        }
+        .main-result-con-ul-li-place{
+            margin-left: 20px;
+            display: inline;
+            font-size: 18px;
+        }
+        .start-symbol{
+            font-size: 18px;
+            margin-left: 20px;
+            display: inline;
+            font-weight: 500;
+        }
+        .main-result-con-ul-li-time{
+            margin-left: 30px;
+            font-size: 20px;
+            font-weight: 500;
+            display: inline;
+        }
+        .main-result-con-ul-li-date{
+            margin-left: 20px;
+            font-size: 18px;
+            font-weight: 500;
+            display: inline;
+        }
+        .main-result-con-ul-li-price{
+            margin-left: 30px;
+            display: inline;
+            color: crimson;
+            font-size: 20px;
+        }
+    </style>
+    <script>
+        document.getElementById("closeWindow").onclick=function(){
+                $("#order-info-window").css("visibility","hidden");
+            }
+        $(document).ready(function(){
+            //读取订单列表
+            $.ajax({
+                url:"http://localhost:8080/order/getUserAllOrder",
+                data:{"user_id":sessionStorage.getItem("id")},
+                dataType:"json",
+                type:"GET",
+                success:function(res){
+                    
+                    res.forEach(e => {
+                        addOrderItem(e.start,e.end,e.start_time,e.end_time,'￥'+e.price,e.flight_id,e.order_id,e.date)
+                    });
+                },
+                error:function(e,x,s){
+                    console.log(JSON.stringify(e));
+                }
+            });
+        });
+        function addOrderItem(start,end,start_time,end_time,price,flight,order_id,date){
+                var order_result_con_ul = document.getElementById("order-result-con-ul");
+                var li=document.createElement("li");
+                li.classList.add("main-result-con-ul-li");
+                var flight_div=document.createElement("div");
+                flight_div.classList.add("main-result-con-ul-li-flight");
+                flight_div.innerHTML=flight;
+                var start_div=document.createElement("div");
+                var end_div=document.createElement("div");
+                var start_symbol=document.createElement("div");
+                start_symbol.classList.add("start-symbol");
+                start_symbol.innerHTML="--->";
+                start_div.classList.add("main-result-con-ul-li-place");
+                end_div.classList.add("main-result-con-ul-li-place");
+                start_div.innerHTML=start;
+                end_div.innerHTML=end;
+                var start_time_div=document.createElement("div");
+                var end_time_div=document.createElement("div");
+                start_time_div.classList.add("main-result-con-ul-li-time");
+                end_time_div.classList.add("main-result-con-ul-li-time");
+                start_time_div.innerHTML=start_time;
+                end_time_div.innerHTML=end_time;
+                var price_div=document.createElement("div");
+                price_div.classList.add("main-result-con-ul-li-price");
+                price_div.innerHTML=price;
+                var date_div=document.createElement("div");
+                date_div.classList.add("main-result-con-ul-li-date");
+                date_div.innerHTML=date;
+                li.appendChild(flight_div);
+                li.appendChild(start_div);
+                li.appendChild(start_symbol);
+                li.appendChild(end_div);
+                li.appendChild(start_time_div);
+                li.appendChild(end_time_div);
+                li.appendChild(price_div);
+                li.appendChild(date_div);
+                order_result_con_ul.appendChild(li);
+                li.onclick=function(){
+                    
+                    $.ajax({
+                    url:"http://localhost:8080/order/getOrder",
+                    data:{"order_id":order_id},
+                    dataType:"json",
+                    type:"GET",
+                    success:function(res){
+                        console.log(res);
+                        $("#order-info-flight").text("航班号："+res.flight_id);
+                        $("#order-info-order-id").text("订单编号："+res.order_id);
+                        $("#order-info-start").text("出发地:"+res.start);
+                        $("#order-info-end").text("到达地:"+res.end);
+                        $("#order-info-start-time").text("出发时间:"+res.start_time);
+                        $("#order-info-end-time").text("到达时间:"+res.end_time);
+                        $("#order-info-date").text("乘坐日期:"+res.date);
+                        $("#order-info-price").text("价格:"+res.price);
+                        $("#order-info-window").css("visibility","visible");
+                    },
+                    error:function(e,x,s){
+                        console.log(JSON.stringify(e));
+                    }
+                });
+                }
+            }
+    </script>
+    
+</div>

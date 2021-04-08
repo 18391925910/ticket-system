@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>登陆</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <link href="css/login-style.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="utils/base.js"></script>
+</head>
+
+<body class="body-ali">
+
+    <div class="top-con">
+        <img class="top-icon" src="img/icon.jpg">
+        <img class="top-title" src="img/title.png">
+        <div class="search-con">
+            <input id="main-search-input" type="text" placeholder="搜索目的地，航班等"/>
+            <button class="main-search-text">搜索</button>
+        </div>
+        <div id="main-service-window" class="alert-window">
+            <button id="main-closeWindow" style="width: 70px;height: 30px;background-color: #ffffff;border: none;
+            ;float: right;color: #4b4b4b;margin: 5px;">
+                关闭
+            </button>
+            <div style="font-size: 20px;color: #ffffff;background-color: #00c777;padding: 20px;">飞鸟出行在线客服</div>
+            <div id="main-alert-window-mes-con" style="width: 100%;height: 65%;background-color: rgb(240, 240, 240);overflow:scroll ;">
+            </div>
+            <div style="width: 100%;height: 35%;background-color: #ffffff;">
+                <textarea id="main-us-mes-ip-con"  style="padding-left: 10px;border: none;font-size: 14px;color: #4b4b4b;width: 90%;height: 100px;margin-top: 20px;" placeholder="请输入您的问题"></textarea>
+                <button id="main-alert-window-btn-send-mes" style="width: 80px;height: 40px;border: none;border-radius: 3px;;background-color: #00c777;float: right;margin-top: 10px;">
+                    发送
+                </button>
+            </div>
+            <script>
+                document.getElementById("main-alert-window-btn-send-mes").onclick=function(){
+                    mes=$("#main-us-mes-ip-con").val()
+                    addUserMes(mes);
+                    $("#main-us-mes-ip-con").val("");
+                    //发送消息
+                    $.ajax({
+                    url:"http://localhost:8080/help/getCustomerChatContent",
+                    data:{"chat_content":mes},
+                    dataType:"json",
+                    type:"GET",
+                    success:function(res){
+                        addSystemMes(res.results[0].values.text);
+                        console.log(res.results[0].values.text);
+                        
+                    },
+                    error:function(e,x,s){
+                        console.log(JSON.stringify(e));
+                        
+                    }
+                    });
+                }
+                function addUserMes(mes){
+                    var mes_con=document.createElement("div");
+                    mes_con.classList.add("main-alert-window-mes-item-user");
+                    mes_con.innerHTML=mes;
+                    var br =document.createElement("div");
+                    br.classList.add("main-alert-window-mes-item-br");
+                    document.getElementById("main-alert-window-mes-con").appendChild(mes_con);
+                    document.getElementById("main-alert-window-mes-con").appendChild(br);
+                }
+                function addSystemMes(mes){
+                    var mes_con=document.createElement("div");
+                    mes_con.classList.add("main-alert-window-mes-item-system");
+                    mes_con.innerHTML=mes;
+                    document.getElementById("main-alert-window-mes-con").appendChild(mes_con);
+                    var br =document.createElement("div");
+                    br.classList.add("main-alert-window-mes-item-br");
+                    document.getElementById("main-alert-window-mes-con").appendChild(br);
+                }   
+            </script>
+        </div>
+        <div class="top-work-con">
+            <button id="main-top-btn-buy" class="main-top-btn">购票</button>
+            <button id="main-top-btn-order" class="main-top-btn">我的订单</button>
+            <button id="main-top-btn-service" class="main-top-btn">联系客服</button>
+            <button id="main-top-btn-user" class="main-top-btn">个人中心</button>
+            <script>
+                document.getElementById("main-top-btn-user").onmouseover=function(){
+                    $("#user-info-window").css("visibility","visible");
+                }
+                document.getElementById("main-top-btn-service").onclick=function(){
+                    $("#main-service-window").css("visibility","visible");
+                    addSystemMes("您好，很高兴为您服务");
+                    addSystemMes("请问有什么可以帮到您的地方？");
+                }
+                document.getElementById("main-closeWindow").onclick=function(){
+                    $("#main-service-window").css("visibility","hidden");
+                    $("#main-alert-window-mes-con").empty();
+                }
+                $(document).ready(function(){
+                    $("#main-mid-con").load("component/buy-ticket.html")
+                    document.title="购票";
+                });
+                document.getElementById("main-top-btn-buy").onclick=function(){
+                    $("#main-mid-con").empty();
+                    $("#main-mid-con").load("component/buy-ticket.html");
+                    document.title="购票";
+                }
+                document.getElementById("main-top-btn-order").onclick=function(){
+                    $("#main-mid-con").empty();
+                    $("#main-mid-con").load("component/my-order.html");
+                    $(document).attr("title","订单");
+                }
+            </script>
+        </div>
+        <div id="user-info-window" class="user-info-window">
+            <div id="user-id" style="font-size: 13px;color: #303030;margin: 10px;">账号：12151</div>
+            <div id="user-name" style="font-size: 13px;color: #303030;margin: 10px;">昵称：张飞</div>
+            <div id="user-count" style="font-size: 13px;color: #303030;margin: 10px;float: left;">余额：50元</div>
+            <button id="main-btn-user-recharge" style="font-size: 13px;color: rgb(34, 155, 177);border: none;background: none;margin: 10px;">充值</button>
+            <div id="user-order-num" style="font-size: 13px;color: #303030;margin: 10px;">订单数量：0</div>
+            <script>
+                $(document).ready(function(){
+                    $.ajax({
+                    url:"http://localhost:8080/user/getUserInfo",
+                    data:{"id":sessionStorage.getItem("id")},
+                    dataType:"json",
+                    type:"GET",
+                    success:function(res){
+                        $("#user-id").text("账号："+res.id);
+                        $("#user-name").text("姓名："+res.name);
+                        $("#user-count").text("余额："+res.count);
+                    },
+                    error:function(e,x,s){
+                        console.log(JSON.stringify(e));
+                    }
+                });
+                });
+                document.getElementById("user-info-window").onmouseleave=function(){
+                    $("#user-info-window").css("visibility","hidden");
+                }
+            </script>
+        </div>
+
+    </div>
+    <div id="main-mid-con" class="mid-con"> 
+        
+    </div>
+</body>
+</html>

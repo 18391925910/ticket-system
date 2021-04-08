@@ -1,0 +1,83 @@
+﻿<div>
+    <video id="video" width="40%" height="150px" style="border-radius: 5px;border: 1px solid #5f5f5f;margin-left: 30%;margin-top: 10px;" autoplay="autoplay"></video>
+
+    <input id="login-face-btn-camera" value="开始扫描" type="submit" style="width: 88%;height: 50px;
+    ;margin-left: 10%;margin-top: 10px;background-color: #ff6257;border-radius: 5px;color: rgb(134, 54, 54);
+    font-size: 20px;"/>
+    <input id="login-face-btn-login" value="完成/登录" type="submit" style="width: 88%;height: 50px;
+    ;margin-left: 10%;margin-top: 10px;background-color: #ff6257;border-radius: 5px;color: #fff;
+    font-size: 20px;"/>
+    <script>
+        var isOpenVideo=false;
+        $("#login-face-btn-camera").click(function(){
+            openMedia();
+        });
+        $("#login-face-btn-login").click(function(){
+            if(isOpenVideo){
+                img=takePhoto();
+            //登录
+            login(img);
+            closeMedia();
+            }else alert("请先开启扫描！");
+            
+        });
+        function login(img){
+            i=encodeURI(img);
+            $.ajax({
+                url:"http://localhost:8080/user/signInByFace",
+                data:{"face_base64":i},
+                dataType:"json",
+                type:"POST",
+                success:function(res){
+                    if(res.result=="success"){
+                        console.log(res);
+                        sessionStorage.setItem("id",res.user_info.user_id);
+                        window.location.href="main.html";
+                    }else if(res.result=="fail"){
+                        console.log(res.info);
+                    }
+                },
+                error:function(e,x,s){
+                    console.log(JSON.stringify(e));
+                    
+                }
+            })
+        }
+        function openMedia() {
+            let constraints = {
+                video: { width: 500, height: 500 },
+                audio: false
+            };
+            //获得video摄像头
+            video = document.getElementById('video');     
+            let promise = navigator.mediaDevices.getUserMedia(constraints);
+            promise.then((mediaStream) => {
+            // mediaStreamTrack = typeof mediaStream.stop === 'function' ? mediaStream : mediaStream.getTracks()[1];
+            mediaStreamTrack=mediaStream.getVideoTracks()
+                video.srcObject = mediaStream;
+                video.play();
+            });
+            isOpenVideo=true;
+        }
+        function takePhoto() {
+            //获得Canvas对象
+            let video = document.getElementById('video');
+            let canvas = document.createElement("canvas");
+            let ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0,canvas.width, canvas.height);
+            // toDataURL  ---  可传入'image/png'---默认, 'image/jpeg'
+            let img = canvas.toDataURL();
+            //console.log(img);
+            return img;
+        }
+        function closeMedia() {
+          let stream = document.getElementById('video').srcObject;
+          let tracks = stream.getTracks();
+          tracks.forEach(function(track) {
+            track.stop();
+          });
+
+         document.getElementById('video').srcObject = null;
+        }
+    </script>
+</div>
