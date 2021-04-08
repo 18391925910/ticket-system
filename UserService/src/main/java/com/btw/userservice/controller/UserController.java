@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class UserController {
     @Autowired
@@ -27,32 +29,32 @@ public class UserController {
      *   @Param:face_base64是使用base64编码和url编码后的image信息
     */
     @PostMapping("signUp")
-    String signUp(@RequestParam("id") String id, @RequestParam("name")String name,
-                 @RequestParam("ps") String ps,@RequestParam("face_base64") String face_base64 ){
+    String signUp(HttpServletRequest request, @RequestParam("id") String id, @RequestParam("name")String name,
+                  @RequestParam("ps") String ps, @RequestParam("face_base64") String face_base64 ){
         return userSingUpService.singUp(id,name,ps,face_base64);
     }
     //人脸登陆
     @PostMapping("signInByFace")
-    String signInByFace(@RequestParam("face_base64") String face_base64){
+    String signInByFace(HttpServletRequest request, @RequestParam("face_base64") String face_base64){
         return userSingInService.singInByFace(face_base64);
     }
     //密码登陆
     @PostMapping("signInByPassword")
-    String signInByPassword(@RequestParam("id") String id,@RequestParam("ps") String ps){
+    String signInByPassword(HttpServletRequest request, @RequestParam("id") String id,@RequestParam("ps") String ps){
         return userSingInService.singInByPassword(id,ps);
     }
     //充值
     @GetMapping("recharge")
-    String recharge(@RequestParam("id") String id,@RequestParam("count") int recharge_count){
+    String recharge(HttpServletRequest request, @RequestParam("id") String id,@RequestParam("count") int recharge_count){
         return userCommandService.recharge(id,recharge_count);
     }
     //消费：减少count
     @GetMapping("cost")
-    String cost(@RequestParam("id") String id,@RequestParam("count") int cost_count){
+    String cost(HttpServletRequest request, @RequestParam("id") String id,@RequestParam("count") int cost_count){
         return userCommandService.cost(id,cost_count);
     }
     @GetMapping("getUserInfo")
-    String getUserInfo(@RequestParam("id") String id){
+    String getUserInfo(HttpServletRequest request, @RequestParam("id") String id){
         return userCommandService.getUserInfo(id);
     }
 }

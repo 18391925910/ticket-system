@@ -6,16 +6,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class HelpController {
     @Autowired
     HelpCommandServiceImpl service;
     @GetMapping("userFeedBack")
-    public String userFeedBack(@RequestParam("feedback_content")String feedback_content,@RequestParam("user_id")String user_id){
+    public String userFeedBack(HttpServletRequest request, @RequestParam("feedback_content")String feedback_content, @RequestParam("user_id")String user_id){
         return service.userFeedBack(feedback_content,user_id);
     }
     @GetMapping("getCustomerChatContent")
-    public String getCustomerChatContent(@RequestParam("chat_content")String chat_content){
+    public String getCustomerChatContent(HttpServletRequest request,@RequestParam("chat_content")String chat_content){
         return service.customerServiceChat(chat_content);
     }
 }

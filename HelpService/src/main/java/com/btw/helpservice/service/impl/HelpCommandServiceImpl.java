@@ -30,7 +30,12 @@ public class HelpCommandServiceImpl extends HelpCommandService {
         return ResultJsonUtil.getInstance().addParam(ResultJsonUtil.RESULT_STR,ResultJsonUtil.RESULT_SUCCESS)
                 .addParam(ResultJsonUtil.INFO_STR,"提交成功，感谢您的反馈！").getResult();
     }
-    //AI客服服务
+
+    /**AI客服服务
+     * @description:调用turing123智能客服接口
+     * @param text
+     * @return
+     */
     @Override
     public String customerServiceChat(String text) {
         String api_key="00333b1afc1c496390cbb4a6483cc444";
