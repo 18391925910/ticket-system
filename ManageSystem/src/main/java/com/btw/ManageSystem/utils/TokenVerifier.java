@@ -1,4 +1,4 @@
-package com.btw.userservice.utils;
+package com.btw.ManageSystem.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,7 +15,6 @@ public class TokenVerifier {
      * @param token
      * @return
      * @description: token算法 id/x-y=token
-     * default: 10240000 4302
      * x=1024
      * y=5698
      */

@@ -2,6 +2,7 @@ package com.btw.OrderService.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.btw.OrderService.entity.CreateKafkaMsgBO;
 import com.btw.OrderService.entity.Order;
 import com.btw.OrderService.entity.Ticket;
 import com.btw.OrderService.mapper.OrderMapper;
@@ -9,8 +10,11 @@ import com.btw.OrderService.service.OrderCommandService;
 import com.btw.OrderService.service.userServiceFeign.UserServiceFeignClient;
 import com.btw.OrderService.service.ticketServiceFeign.TicketServiceFeignClient;
 import com.btw.OrderService.utils.ResultJsonUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,33 +23,48 @@ import java.util.Date;
 
 
 @Service
+@Slf4j
 public class OrderCommandServiceImpl extends OrderCommandService {
     @Resource
     TicketServiceFeignClient ticketService;
     @Resource
     UserServiceFeignClient userService;
 
-    @Autowired
+    @Resource
     OrderMapper orderMapper;
+    @Resource
+    private KafkaTemplate<String,String> kafkaTemplate;
+
     @Override
-    public String addOrder(String user_id, String ticket_id) {
+    public String createOrder(String user_id, String ticket_id){
         String result;
-        JSONObject ticket = JSON.parseObject(ticketService.getTicket(ticket_id));
+        Ticket ticket = JSON.parseObject(ticketService.getTicket(ticket_id),Ticket.class);
         String order_id=Long.toString(new Date().getTime());
         //日期
         DateFormat df=DateFormat.getDateInstance(DateFormat.SHORT);
-        if (ticket.getInteger("quantity")>0){
-            orderMapper.addOrder(order_id,ticket.getString("ticket_id"),ticket.getString("start"),ticket.getString("end"),ticket.getString("start_time"),ticket.getString("end_time"),
-                    ticket.getString("date"),ticket.getInteger("price"),user_id,df.format(new Date()),ticket.getString("flight_id"),"正常");
+        log.info("Quantity:{}",ticket.getQuantity());
+        log.info("Ticket:{}",ticket.toString());
+        if (ticket.getQuantity()>0){
+            orderMapper.addOrder(order_id,ticket.getTicket_id(),ticket.getStart(),ticket.getEnd(),ticket.getStart_time(),ticket.getEnd_time(),
+                    ticket.getDate(),ticket.getPrice(),user_id,df.format(new Date()),ticket.getFlight_id(),"正常");
             result=ResultJsonUtil.getInstance().addParam(ResultJsonUtil.RESULT_STR,ResultJsonUtil.RESULT_SUCCESS)
-                    .addParam(ResultJsonUtil.INFO_STR,"购买成功！").getResult();
+                    .addParam(ResultJsonUtil.INFO_STR,"buy ticket success！").getResult();
             ticketService.reduceTicketQuantity(ticket_id);
-            userService.cost(user_id,ticket.getInteger("price"));
+            userService.cost(user_id,ticket.getPrice());
         }else {
             result=ResultJsonUtil.getInstance().addParam(ResultJsonUtil.RESULT_STR,ResultJsonUtil.RESULT_FAIL)
-                    .addParam(ResultJsonUtil.INFO_STR,"票已售空！").getResult();
+                    .addParam(ResultJsonUtil.INFO_STR,"ticket has been sold out").getResult();
         }
         return result;
+    }
+
+    @Override
+    public String addOrder(String user_id, String ticket_id) {
+        String data=JSON.toJSONString(new CreateKafkaMsgBO(user_id,ticket_id));
+        kafkaTemplate.send("order",data);
+        LoggerFactory.getLogger("createOrderLog").info("start create order");
+        return ResultJsonUtil.getInstance().addParam(ResultJsonUtil.RESULT_STR,ResultJsonUtil.RESULT_SUCCESS)
+                .addParam(ResultJsonUtil.INFO_STR,"order is creating").getResult();
     }
 
     @Override
@@ -57,10 +76,10 @@ public class OrderCommandServiceImpl extends OrderCommandService {
             ticketService.addTicketQuantity(order.getTicket_id());
             userService.recharge(order.getUser_id(),order.getPrice());
             result=ResultJsonUtil.getInstance().addParam(ResultJsonUtil.RESULT_STR,ResultJsonUtil.RESULT_SUCCESS)
-                    .addParam(ResultJsonUtil.INFO_STR,"取消成功！").getResult();
+                    .addParam(ResultJsonUtil.INFO_STR,"cancel order success").getResult();
         }else {
             result=ResultJsonUtil.getInstance().addParam(ResultJsonUtil.RESULT_STR,ResultJsonUtil.RESULT_FAIL)
-                    .addParam(ResultJsonUtil.INFO_STR,"没有此订单！").getResult();
+                    .addParam(ResultJsonUtil.INFO_STR,"This order is not available").getResult();
         }
         return result;
     }
@@ -80,6 +99,8 @@ public class OrderCommandServiceImpl extends OrderCommandService {
     public String createTicketQRCode(String order_id) {
         return null;
     }
+
+
 
     @Override
     public String getAllOrder() {

@@ -1,7 +1,5 @@
 package com.btw.OrderService.entity;
 
-import java.util.Date;
-
 public class Ticket {
     private String ticket_id;
     private String start;//出发地
