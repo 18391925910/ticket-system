@@ -5,7 +5,7 @@ import com.btw.OrderService.entity.CreateKafkaMsgBO;
 import com.btw.OrderService.entity.Order;
 import com.btw.OrderService.entity.Ticket;
 import com.btw.OrderService.mapper.OrderMapper;
-import com.btw.OrderService.service.OrderCommandService;
+import com.btw.OrderService.service.OrderCommonService;
 import com.btw.OrderService.service.userServiceFeign.UserServiceFeignClient;
 import com.btw.OrderService.service.ticketServiceFeign.TicketServiceFeignClient;
 import com.btw.OrderService.utils.ResultJsonUtil;
@@ -22,7 +22,7 @@ import java.util.Date;
 
 @Service
 @Slf4j
-public class OrderCommandServiceImpl extends OrderCommandService {
+public class OrderCommonServiceImpl extends OrderCommonService {
     @Resource
     TicketServiceFeignClient ticketService;
     @Resource
@@ -92,7 +92,7 @@ public class OrderCommandServiceImpl extends OrderCommandService {
     }
 
     @Override
-    public String createTicketQRCode(String order_id) {
+    public String getPaperTicket(String order_id) {
         return null;
     }
 

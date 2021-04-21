@@ -1,4 +1,5 @@
 package com.btw.OrderService;
+import com.btw.OrderService.service.ServiceManager;
 import com.btw.OrderService.utils.ResultJsonUtil;
 import com.btw.OrderService.utils.TokenVerifier;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,11 @@ public class ControllerAspect {
         HttpServletRequest request=(HttpServletRequest) joinPoint.getArgs()[0];
         String user_id=request.getHeader("user_id");
         String token=request.getHeader("token");
+        if (ServiceManager.ManageServiceConfig.isServicePause()||!methodSignature.getName().equals("startService"))
+            return ResultJsonUtil.getInstance()
+                    .addParam(ResultJsonUtil.RESULT_STR,ResultJsonUtil.RESULT_FAIL)
+                    .addParam(ResultJsonUtil.INFO_STR,"服务暂停")
+                    .getResult();
         if (TokenVerifier.verifyToken(user_id,token))
             return joinPoint.proceed();
         else return ResultJsonUtil.getInstance()

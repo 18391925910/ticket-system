@@ -16,4 +16,12 @@ public class ManageController {
         model.addAttribute("data","1");
         return "main";
     }
+    /**
+     * @description: 微服务控制：动态更改其他服务参数
+     */
+    @GetMapping("service-manage")
+    public String serviceManage(Model model){
+        model.addAttribute("data","1");
+        return "service-manage";
+    }
 }

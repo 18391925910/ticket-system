@@ -1,6 +1,6 @@
 package com.btw.OrderService.controller;
 
-import com.btw.OrderService.service.impl.OrderCommandServiceImpl;
+import com.btw.OrderService.service.impl.OrderCommonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class OrderController {
     @Autowired
-    OrderCommandServiceImpl orderCommandService;
+    OrderCommonServiceImpl orderCommandService;
 
     @GetMapping("getOrder")
     String getOrder(HttpServletRequest request, @RequestParam("order_id") String order_id){
@@ -35,11 +35,11 @@ public class OrderController {
     }
 
     /**
-     * 生成取票码
+     * 生成纸质机票
      * @return
      */
-    @GetMapping("createTicketQRCode")
-    String createTicketQRCode(HttpServletRequest request,@RequestParam("order_id")String order_id){
-        return orderCommandService.createTicketQRCode(order_id);
+    @GetMapping("getPaperTicket")
+    String getPaperTicket(HttpServletRequest request,@RequestParam("order_id")String order_id){
+        return orderCommandService.getPaperTicket(order_id);
     }
 }
