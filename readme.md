@@ -1,8 +1,8 @@
-#ticket-system-分布式售票系统
-##EurekaServer:微服务注册中心
+# ticket-system-分布式售票系统
+## EurekaServer:微服务注册中心
 + 服务注册
 + 服务发现
-##GatewayServer:网关路由系统
+## GatewayServer:网关路由系统
 + 流量控制
 + 网关路由
 ##OrderService:订单管理系统
