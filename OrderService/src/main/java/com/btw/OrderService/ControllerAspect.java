@@ -32,7 +32,7 @@ public class ControllerAspect {
         HttpServletRequest request=(HttpServletRequest) joinPoint.getArgs()[0];
         String user_id=request.getHeader("user_id");
         String token=request.getHeader("token");
-        if (ServiceManager.ManageServiceConfig.isServicePause()||!methodSignature.getName().equals("startService"))
+        if (ServiceManager.ManageServiceConfig.isServicePause()&&!methodSignature.getName().equals("startService"))
             return ResultJsonUtil.getInstance()
                     .addParam(ResultJsonUtil.RESULT_STR,ResultJsonUtil.RESULT_FAIL)
                     .addParam(ResultJsonUtil.INFO_STR,"服务暂停")

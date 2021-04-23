@@ -46,6 +46,16 @@ public class ResultJsonUtil {
             this.result=curJsonObject.toJSONString();
             return this;
         }
+        public ResultJson success(String info){
+            this.addParam(ResultJsonUtil.RESULT_STR,ResultJsonUtil.RESULT_SUCCESS)
+                    .addParam(ResultJsonUtil.INFO_STR,info);
+            return this;
+        }
+        public ResultJson fail(String info){
+            this.addParam(ResultJsonUtil.RESULT_STR,ResultJsonUtil.RESULT_FAIL)
+                    .addParam(ResultJsonUtil.INFO_STR,info);
+            return this;
+        }
         public String getResult(){
             log.info("Result:{}",result);
             return result;

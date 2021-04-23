@@ -1,6 +1,7 @@
 package com.btw.OrderService.service;
 
 import com.btw.OrderService.utils.ResultJsonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
  * @create: 2021-04-21 15:13
  * @description: 服务控制 动态参数
  */
+@Slf4j
 @Service
 public class ServiceManager {
     public String pauseService(){
@@ -23,8 +25,9 @@ public class ServiceManager {
     }
 
     public String alterConfig(String config_name,String config_value){
+        log.info("config_name:{}config_value:{}",config_name,config_value);
         return ResultJsonUtil.getInstance().addParam(ResultJsonUtil.RESULT_STR,ResultJsonUtil.RESULT_SUCCESS)
-                .addParam(ResultJsonUtil.INFO_STR,"alert Service config").getResult();
+                .addParam(ResultJsonUtil.INFO_STR,"alert Service config Success current config-"+config_name+":"+config_value).getResult();
     }
 
     public static class ManageServiceConfig{
