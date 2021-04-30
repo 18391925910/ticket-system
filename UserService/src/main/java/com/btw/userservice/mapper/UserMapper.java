@@ -4,6 +4,8 @@ import com.btw.userservice.entity.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Mapper
 @Component("UserMapper")
 public interface UserMapper {
@@ -22,4 +24,6 @@ public interface UserMapper {
     //消费
     @Update("update user set count = #{count} where id = #{id}")
     void cost(@Param("id") String id,@Param("count") int count);
+    @Select("select * from user")
+    List<User> getAllUser();
 }

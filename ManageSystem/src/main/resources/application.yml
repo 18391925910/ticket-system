@@ -20,4 +20,4 @@ spring:
     encoding: utf-8
     cache: false
 manage:
-  service-base-url: http://localhost:8080
+  service-base-url: http://localhost:80

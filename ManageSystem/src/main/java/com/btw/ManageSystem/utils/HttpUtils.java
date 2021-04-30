@@ -12,6 +12,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @create: elvis.yue
@@ -19,13 +21,25 @@ import java.util.HashMap;
  */
 @Slf4j
 public class HttpUtils {
+
     static CloseableHttpClient httpClient = HttpClientBuilder.create().build();
     public static String get(String url){
         return get(url,null);
     }
-    public static String get(String url, HashMap<String,String> headers) {
+    /**
+     * with token
+     */
+    public static String getWithToken(String url){
+        Map<String,String> header=new HashMap<>();
+        header.put("user_id","10240000");
+        header.put("token","4302");
+        return get(url,header);
+    }
+    public static String get(String url, Map<String,String> headers) {
         HttpGet httpGet = new HttpGet(url);
-        headers.forEach(httpGet::setHeader);
+        if (!Objects.isNull(headers)){
+            headers.forEach(httpGet::setHeader);
+        }
         CloseableHttpResponse response;
         String body="";
         try {

@@ -57,4 +57,8 @@ public class UserController {
     String getUserInfo(HttpServletRequest request, @RequestParam("id") String id){
         return userCommandService.getUserInfo(id);
     }
+    @GetMapping("getAllUser")
+    String getAllUser(HttpServletRequest request){
+        return userCommandService.getAllUser();
+    }
 }

@@ -1,5 +1,6 @@
 package com.btw.helpservice.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.btw.helpservice.mapper.HelpMapper;
 import com.btw.helpservice.service.HelpCommandService;
 import com.btw.helpservice.utils.ResultJsonUtil;
@@ -11,12 +12,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
-import java.io.IOException;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.IOException;
 import java.util.Date;
 
 
@@ -24,6 +22,13 @@ import java.util.Date;
 public class HelpCommandServiceImpl extends HelpCommandService {
     @Autowired
     HelpMapper mapper;
+
+    /**
+     * @description: 用户反馈服务
+     * @param text
+     * @param user_id
+     * @return
+     */
     @Override
     public String userFeedBack(String text,String user_id) {
         mapper.addUserFeedback(Long.toString(new Date().getTime()),text,user_id,new Date().toString());
@@ -81,5 +86,9 @@ public class HelpCommandServiceImpl extends HelpCommandService {
         }
 
         return result;
+    }
+
+    public String getAllUserFeedBack(){
+        return JSONArray.toJSONString(mapper.getAllFeedBack());
     }
 }

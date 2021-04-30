@@ -1,6 +1,7 @@
 package com.btw.userservice.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.btw.userservice.entity.User;
 import com.btw.userservice.mapper.UserMapper;
 import com.btw.userservice.service.UserCommandService;
@@ -44,5 +45,8 @@ public class UserCommandServiceImpl extends UserCommandService {
     public String getUserInfo(String id) {
         User user=mapper.getUser(id);
         return JSON.toJSONString(user);
+    }
+    public String getAllUser(){
+        return JSONArray.toJSONString(mapper.getAllUser());
     }
 }

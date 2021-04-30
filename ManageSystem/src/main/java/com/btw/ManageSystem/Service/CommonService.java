@@ -1,7 +1,10 @@
 package com.btw.ManageSystem.Service;
+
 import com.btw.ManageSystem.config.BaseConfig;
 import com.btw.ManageSystem.utils.HttpUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.util.HashMap;
 /**
  * @author: elvis.yue@i9i8.com
@@ -9,8 +12,8 @@ import java.util.HashMap;
  */
 @Service
 public class CommonService {
-    //@Value("manage.service-base-url")
-    String baseUrl="http://localhost:8080";
+    @Value("${manage.service-base-url}")
+    String baseUrl;
 
     /**
      *

@@ -1,8 +1,12 @@
 package com.btw.ManageSystem.controller;
 
+import com.btw.ManageSystem.Service.DataService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -12,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("data")
 public class DataStatisticController {
+    @Autowired
+    DataService dataService;
     /**
      * @description: 数据统计
      * @param modelAndView
@@ -20,5 +26,15 @@ public class DataStatisticController {
     @GetMapping("statistic")
     public String DataStatistic(ModelAndView modelAndView){
         return "data-statictic";
+    }
+
+    /**
+     * @description: get service all data
+     * @return
+     */
+    @GetMapping("all/{service}")
+    @ResponseBody
+    public String getAllData(@PathVariable String service){
+        return dataService.getAllData(service);
     }
 }
